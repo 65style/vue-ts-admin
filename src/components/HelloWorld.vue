@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import Comp from '~comps/Comp.vue'
+import Comp from '@/components/Comp.vue'
 import { ref, defineComponent, reactive, defineEmit, useContext } from 'vue'
 export default defineComponent({
   name: 'HelloWorld',

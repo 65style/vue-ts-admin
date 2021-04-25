@@ -1,5 +1,14 @@
 <template>
+  <SvgIcon
+    :size="size"
+    :name="getSvgIcon"
+    v-if="isSvgIcon"
+    :class="[$attrs.class]"
+    :spin="spin"
+  />
+
   <span
+    v-else
     ref="elRef"
     :class="[$attrs.class, 'app-iconify anticon', spin && 'app-iconify-spin']"
     :style="getWrapStyle"
@@ -8,8 +17,9 @@
 </template>
 
 <script lang="ts">
+import SvgIcon from './SvgIcon.vue'
 import Iconify from '@purge-icons/generated'
-import { isString } from '~utils/is'
+import { isString } from '../../../utils/is'
 import {
   defineComponent,
   ref,
@@ -21,51 +31,51 @@ import {
 } from 'vue'
 
 export default defineComponent({
+  name: 'GIcon',
+  components: { SvgIcon },
   props: {
     // icon name
     icon: String,
     prefix: String,
     color: String,
     size: {
-      type: Number,
+      type: [String, Number],
       default: 16,
     },
     spin: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   setup(props) {
     const elRef = ref<ElRef>(null)
-    console.log('elRef: ', elRef)
+
+    const isSvgIcon = computed(() => props.icon?.endsWith(SVG_END_WITH_FLAG))
     const getIconRef = computed(
       () => `${props.prefix ? props.prefix + ':' : ''}${props.icon}`
     )
-    console.log('getIconRef: ', getIconRef)
 
     const update = async () => {
       const el = unref(elRef)
-      console.log('el: ', el)
+
       if (!el) return
 
       await nextTick()
       const icon = unref(getIconRef)
-      console.log('icon: ', icon)
+
       if (!icon) return
 
       const svg = Iconify.renderSVG(icon, {})
-      console.log('svg: ', svg)
+
       if (svg) {
         el.textContent = ''
         el.appendChild(svg)
-        console.log('el1: ', el)
       } else {
         const span = document.createElement('span')
         span.className = 'iconify'
         span.dataset.icon = icon
         el.textContent = ''
         el.appendChild(span)
-        console.log('el2: ', el)
       }
     }
 
@@ -84,7 +94,6 @@ export default defineComponent({
         }
       }
     )
-    console.log('getWrapStyle: ', getWrapStyle)
 
     onMounted(update)
     return { elRef, getWrapStyle }

@@ -18,13 +18,7 @@ export default ({ command }: ConfigEnv): UserConfigExport => {
     },
     resolve: {
       alias: {
-        '@': resolve(__dirname, 'src'),
-        '~views': resolve(__dirname, 'src/views'),
-        '~styles': resolve(__dirname, 'src/styles'),
-        '~comps': resolve(__dirname, 'src/components'),
-        '~assets': resolve(__dirname, 'src/assets'),
-        '~plugins': resolve(__dirname, 'src/plugins'),
-        '~utils': resolve(__dirname, 'src/utils'),
+        '@': resolve(__dirname, 'src')
       },
     },
     plugins: [

@@ -7,9 +7,10 @@
     <use :xlink:href="symbolId" />
   </svg>
 </template>
-
 <script lang="ts">
-import { defineComponent } from 'vue'
+import type { CSSProperties } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useDesign } from '@/hooks/web/useDesign'
 
 export default defineComponent({
   name: 'SvgIcon',
@@ -32,9 +33,35 @@ export default defineComponent({
     },
   },
   setup(props) {
-    return {}
+    const { prefixCls } = useDesign('svg-icon')
+    const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+
+    const getStyle = computed(
+      (): CSSProperties => {
+        const { size } = props
+        let s = `${size}`
+        s = `${s.replace('px', '')}px`
+        return {
+          width: s,
+          height: s,
+        }
+      }
+    )
+    return { symbolId, prefixCls, getStyle }
   },
 })
 </script>
+<style lang="less" scoped>
+@prefix-cls: ~'@{namespace}-svg-icon';
 
-<style scoped></style>
+.@{prefix-cls} {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: -0.15em;
+  fill: currentColor;
+}
+
+.svg-icon-spin {
+  animation: loadingCircle 1s infinite linear;
+}
+</style>
